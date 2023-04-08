@@ -6,3 +6,4 @@ requests==2.28.2
 sklearn
 DecisionTreeClassifier
 LabelEncoder
+streamlit==1.21.0
