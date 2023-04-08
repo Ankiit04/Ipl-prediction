@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TATA IPL 2023</title>
+    <style>
+        body {
+            background-color: purple;
+            background-image: linear-gradient(to bottom right, #800080, #ff00ff);
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: black; /* Changed text color to black */
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background-color: yellow;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TATA IPL 2023</h1>
+        <form method="post" action="/predict">
+            <label for="team1">Team 1:</label>
+            <select name="team1" id="team1">
+                {% for team in teams %}
+                <option value="{{ team }}">{{ team }}</option>
+                {% endfor %}
+            </select>
+            <label for="team2">Team 2:</label>
+            <select name="team2" id="team2">
+                {% for team in teams %}
+                <option value="{{ team }}">{{ team }}</option>
+                {% endfor %}
+            </select>
+            <label for="venue">Venue:</label>
+            <select name="venue" id="venue">
+                {% for venue in venues %}
+                <option value="{{ venue }}">{{ venue }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Predict">
+        </form>
+        <div class="result">
+            {% if predicted_winner %}
+            <h3>Predicted Winner:</h3>
+            <p>{{ predicted_winner }}</p>
+	    <a href="/tipme" class="tipme">tipme</a>
+
+
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
