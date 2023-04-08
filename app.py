@@ -5,30 +5,28 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 
 import signal
-import time
+import sys
 
-# Define a signal handler function
-def signal_handler(signal_num, frame):
-    print(f"Received signal: {signal_num}")
-    # Perform actions based on the received signal
-    if signal_num == signal.SIGINT:
-        print("SIGINT received. Exiting...")
-        # Perform cleanup actions, if needed
-        exit(0)
-    elif signal_num == signal.SIGTERM:
-        print("SIGTERM received. Exiting...")
-        # Perform cleanup actions, if needed
-        exit(0)
+# Define signal handler function
+def signal_handler(signal, frame):
+    print("Received SIGINT signal. Exiting gracefully...")
+    # Additional cleanup or handling code can be added here
+    sys.exit(0)
 
-# Register the signal handler for SIGINT and SIGTERM
+# Register signal handler for SIGINT (Ctrl+C)
 signal.signal(signal.SIGINT, signal_handler)
-signal.signal(signal.SIGTERM, signal_handler)
 
-# Simulate a long-running process
+# Your prediction app code here
+
+# Keep the main thread alive to handle signals
 while True:
-    print("Running...")
-    time.sleep(1)
-
+    try:
+        # Run your prediction app logic here
+        pass
+    except Exception as e:
+        # Handle exceptions if any
+        print("Error occurred:", e)
+        # Additional error handling code can be added here
 
 
 app = Flask(__name__)
