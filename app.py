@@ -4,21 +4,18 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 
-import signal
-import sys
+import streamlit as st
 
-# Define signal handler function
-def signal_handler(signal, frame):
-    print("Received SIGINT signal. Exiting gracefully...")
-    # Additional cleanup or handling code can be added here
-    sys.exit(0)
+# Define stop function
+def stop():
+    raise SystemExit
 
-# Register signal handler for SIGINT (Ctrl+C)
-signal.signal(signal.SIGINT, signal_handler)
+# Register stop function as Streamlit's stop callback
+st._stop_callbacks.add(stop)
 
 # Your prediction app code here
 
-# Keep the main thread alive to handle signals
+# Keep the Streamlit app running
 while True:
     try:
         # Run your prediction app logic here
