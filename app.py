@@ -3,7 +3,10 @@ import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
-
+if __name__ == "__main__":
+    socketio.run(app)
+    
+    
 app = Flask(__name__)
 
 
