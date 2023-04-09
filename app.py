@@ -121,4 +121,4 @@ def goback():
     return render_template('tipme.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
