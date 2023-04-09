@@ -5,18 +5,23 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 
 import streamlit as st
+import signal
 
-# Define stop function
-def stop():
-    raise SystemExit
+# Define global flag to control app execution
+app_running = True
 
-# Register stop function as Streamlit's stop callback
-st._stop_callbacks.add(stop)
+# Define signal handler function
+def signal_handler(signal, frame):
+    global app_running
+    app_running = False
+
+# Register signal handler for SIGINT (Ctrl+C)
+signal.signal(signal.SIGINT, signal_handler)
 
 # Your prediction app code here
 
 # Keep the Streamlit app running
-while True:
+while app_running:
     try:
         # Run your prediction app logic here
         pass
