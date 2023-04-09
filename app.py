@@ -120,10 +120,10 @@ def signal_handler(signal, frame):
         # Render the form for user input
         return render_template('form.html')
    
-@app.route('/tipme')
-def goback():
-    return render_template('tipme.html')
- pass
+        @app.route('/tipme')
+        def goback():
+            return render_template('tipme.html')
+        pass
 
 # Register signal handler in main thread
 signal.signal(signal.SIGINT, signal_handler)
