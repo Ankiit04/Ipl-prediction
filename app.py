@@ -3,23 +3,8 @@ import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
+
 app = Flask(__name__)
-import signal
-
-# Define signal handler function
-def signal_handler(signal, frame):
-    print("Received SIGINT signal, exiting gracefully...")
-    global app_running
-    app_running = False
-
-if __name__ == '__main__':
-    app_running = True
-    signal.signal(signal.SIGINT, signal_handler)
-    while app_running:
-        try:
-            
-
-
 
 
 # Load the IPL matches dataset
@@ -134,15 +119,6 @@ def predict():
 @app.route('/tipme')
 def goback():
     return render_template('tipme.html')
-
-# Run your prediction app logic here
-            pass
-        except Exception as e:
-            # Handle exceptions if any
-            print("Error occurred:", e)
-            # Additional error handling code can be added here
-
-    app.run(debug=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
