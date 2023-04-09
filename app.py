@@ -3,11 +3,8 @@ import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
-
-import signal
-
-
 app = Flask(__name__)
+import signal
 
 # Define signal handler function
 def signal_handler(signal, frame):
@@ -23,7 +20,6 @@ if __name__ == '__main__':
             
 
 
-app = Flask(__name__)
 
 
 # Load the IPL matches dataset
