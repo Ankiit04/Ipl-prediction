@@ -3,12 +3,11 @@ import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
-if __name__ == "__main__":
-    socketio.run(app)
-    
-    
+import signal
+import threading
+from flask_socketio import SocketIOv    
 app = Flask(__name__)
-
+socketio = SocketIO(app)
 
 # Load the IPL matches dataset
 ipl = pd.read_csv('matches.csv')
@@ -75,53 +74,60 @@ teams.remove(teams_to_remove[2])
 
 venues = venue_label_encoder.inverse_transform(ipl['venue'].unique())
 
+def signal_handler(signal, frame):
 
 
 
-# Split the data into training and testing sets
-X_train = ipl[['team1', 'team2', 'venue']]
-y_train = ipl['winner']
+    # Split the data into training and testing sets
+    X_train = ipl[['team1', 'team2', 'venue']]
+    y_train = ipl['winner']
 
-model = DecisionTreeClassifier()
-model.fit(X_train, y_train)
+    model = DecisionTreeClassifier()
+    model.fit(X_train, y_train)
 
-@app.route('/')
-def form():
-    # Get unique team names and venue names
-    teams = team_label_encoder.inverse_transform(ipl['team1'].unique())
-    venues = venue_label_encoder.inverse_transform(ipl['venue'].unique())
-    return render_template('form.html', teams=teams, venues=venues)
+    @app.route('/')
+    def form():
+        # Get unique team names and venue names
+        teams = team_label_encoder.inverse_transform(ipl['team1'].unique())
+        venues = venue_label_encoder.inverse_transform(ipl['venue'].unique())
+        return render_template('form.html', teams=teams, venues=venues)
 
-@app.route('/predict', methods=['GET', 'POST'])
-def predict():
-    if request.method == 'POST':
-        # Access user input from form
-        team1 = request.form['team1']
-        team2 = request.form['team2']
-        venue = request.form['venue']
-        
-        # Encode user input using label encoder
-        team1_encoded = team_label_encoder.transform([team1])[0]
-        team2_encoded = team_label_encoder.transform([team2])[0]
-        venue_encoded = venue_label_encoder.transform([venue])[0]
-        
-        # Modify the new_data to use team1 and team2 selected by the user
-        new_data = [[team1_encoded, team2_encoded, venue_encoded]]
-        
-        # Make prediction
-        predicted_winner = model.predict(new_data)
-        
-        # Decode the predicted winner label
-        decoded_winner = team_label_encoder.inverse_transform(predicted_winner)
-        
-        # Return predicted winner to the template for rendering
-        return render_template('result.html', predicted_winner=decoded_winner[0])
-    
-    # Render the form for user input
-    return render_template('form.html')
+    @app.route('/predict', methods=['GET', 'POST'])
+    def predict():
+        if request.method == 'POST':
+            # Access user input from form
+            team1 = request.form['team1']
+            team2 = request.form['team2']
+            venue = request.form['venue']
+
+            # Encode user input using label encoder
+            team1_encoded = team_label_encoder.transform([team1])[0]
+            team2_encoded = team_label_encoder.transform([team2])[0]
+            venue_encoded = venue_label_encoder.transform([venue])[0]
+
+            # Modify the new_data to use team1 and team2 selected by the user
+            new_data = [[team1_encoded, team2_encoded, venue_encoded]]
+
+            # Make prediction
+            predicted_winner = model.predict(new_data)
+
+            # Decode the predicted winner label
+            decoded_winner = team_label_encoder.inverse_transform(predicted_winner)
+
+            # Return predicted winner to the template for rendering
+            return render_template('result.html', predicted_winner=decoded_winner[0])
+
+        # Render the form for user input
+        return render_template('form.html')
+   
 @app.route('/tipme')
 def goback():
     return render_template('tipme.html')
+ pass
+
+# Register signal handler in main thread
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGTERM, signal_handler)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app)
