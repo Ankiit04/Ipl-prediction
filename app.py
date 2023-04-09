@@ -20,14 +20,7 @@ if __name__ == '__main__':
     signal.signal(signal.SIGINT, signal_handler)
     while app_running:
         try:
-            # Run your prediction app logic here
-            pass
-        except Exception as e:
-            # Handle exceptions if any
-            print("Error occurred:", e)
-            # Additional error handling code can be added here
-
-    app.run(debug=True)
+            
 
 
 app = Flask(__name__)
@@ -145,6 +138,15 @@ def predict():
 @app.route('/tipme')
 def goback():
     return render_template('tipme.html')
+
+# Run your prediction app logic here
+            pass
+        except Exception as e:
+            # Handle exceptions if any
+            print("Error occurred:", e)
+            # Additional error handling code can be added here
+
+    app.run(debug=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
