@@ -4,31 +4,20 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 
-import streamlit as st
-import signal
+if __name__ == '__main__':
+    app_running = True
+    signal.signal(signal.SIGINT, signal_handler)
+    while app_running:
+        try:
+            # Run your prediction app logic here
+            pass
+        except Exception as e:
+            # Handle exceptions if any
+            print("Error occurred:", e)
+            # Additional error handling code can be added here
 
-# Define global flag to control app execution
-app_running = True
+    app.run(debug=True)
 
-# Define signal handler function
-def signal_handler(signal, frame):
-    global app_running
-    app_running = False
-
-# Register signal handler for SIGINT (Ctrl+C)
-signal.signal(signal.SIGINT, signal_handler)
-
-# Your prediction app code here
-
-# Keep the Streamlit app running
-while app_running:
-    try:
-        # Run your prediction app logic here
-        pass
-    except Exception as e:
-        # Handle exceptions if any
-        print("Error occurred:", e)
-        # Additional error handling code can be added here
 
 
 app = Flask(__name__)
