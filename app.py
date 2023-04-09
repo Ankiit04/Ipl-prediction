@@ -50,7 +50,7 @@ socketio = SocketIO(app)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('form.html')
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -61,7 +61,7 @@ def predict():
     features = np.array([team1, team2, toss_winner, venue]).reshape(1, -1)
     prediction = dtc.predict(features)
     predicted_winner = le.inverse_transform(prediction)[0]
-    return render_template('index.html', prediction=predicted_winner)
+    return render_template('result.html', prediction=predicted_winner)
 
 @app.route('/tipme')
 def tipme():
