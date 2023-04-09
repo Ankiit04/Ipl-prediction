@@ -1,10 +1,9 @@
+from flask import Flask, render_template, request
 import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
-from flask import Flask, render_template, request
-from flask_socketio import SocketIO
-import signal
+
 app = Flask(__name__)
 
 
