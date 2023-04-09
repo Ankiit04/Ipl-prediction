@@ -5,7 +5,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 import signal
 import threading
-from flask_socketio import SocketIOv    
+from flask_socketio import SocketIO   
 app = Flask(__name__)
 socketio = SocketIO(app)
 
