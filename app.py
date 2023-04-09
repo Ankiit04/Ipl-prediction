@@ -4,6 +4,17 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 
+import signal
+
+
+app = Flask(__name__)
+
+# Define signal handler function
+def signal_handler(signal, frame):
+    print("Received SIGINT signal, exiting gracefully...")
+    global app_running
+    app_running = False
+
 if __name__ == '__main__':
     app_running = True
     signal.signal(signal.SIGINT, signal_handler)
@@ -17,7 +28,6 @@ if __name__ == '__main__':
             # Additional error handling code can be added here
 
     app.run(debug=True)
-
 
 
 app = Flask(__name__)
