@@ -94,4 +94,4 @@ def app():
         team_mapping = pd.DataFrame({'Team ID': ipl['team1'].unique(), 'Team Name': team_label_encoder.inverse_transform(ipl['team1'].unique())})
         st.write(team_mapping)
 if name == 'main':
-app()
+    app()
