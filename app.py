@@ -93,5 +93,5 @@ def app():
         st.markdown("## Team Mapping Data")
         team_mapping = pd.DataFrame({'Team ID': ipl['team1'].unique(), 'Team Name': team_label_encoder.inverse_transform(ipl['team1'].unique())})
         st.write(team_mapping)
-if name == 'main':
+if name == 'app':
     app()
