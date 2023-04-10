@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
+st.set_option('browser.gatherUsageStats', False)
 
 # Load the IPL matches dataset
 ipl = pd.read_csv('matches.csv')
