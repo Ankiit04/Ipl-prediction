@@ -1,8 +1,8 @@
-import streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
+import streamlit as st
 
 # Load the IPL matches dataset
 ipl = pd.read_csv('matches.csv')
@@ -19,8 +19,8 @@ team_rename_dict = {
 # Define dictionary to rename venue names
 venue_rename_dict = {
     'ACA-VDCA Stadium': 'Arun Jaitley Stadium',
-    'Green Park': 'Narendra Modi Stadium',
-    'Buffalo Park': 'Ekana Cricket Stadium',
+    'Green Park': 'Narendra MOdi Stadium',
+    'Buffalo Park': 'Ekana Cricket Stadium'
     # Add more venue name mappings as needed
 }
 
@@ -69,21 +69,56 @@ model = DecisionTreeClassifier()
 model.fit(X_train, y_train)
 
 # Streamlit app
-st.title('IPL Match Winner Prediction')
-st.markdown('---')
+def app():
+    st.title('IPL Prediction')
+    st.subheader('Select Teams and Venue:')
+    
+    team1 = st.selectbox('Team 1', teams)
+    team2 = st.selectbox('Team 2', teams)
+    venue = st.selectbox('Venue', venues)
+    
+    if st.button('Predict'):
+        # Encode user input using label encoder
+        team1_encoded = team_label_encoder.transform([team1])[0]
+        team
+@app.route('/')
+def form():
+    # Get unique team names and venue names
+    teams = team_label_encoder.inverse_transform(ipl['team1'].unique())
+    venues = venue_label_encoder.inverse_transform(ipl['venue'].unique())
+    return render_template('form.html', teams=teams, venues=venues)
 
-# Render the form for user input
-team1 = st.selectbox('Select Team 1', teams)
-team2 = st.selectbox('Select Team 2', teams)
-venue = st.selectbox('Select Venue', venues)
+@app.route('/predict', methods=['GET', 'POST'])
+def predict():
+    if request.method == 'POST':
+        # Access user input from form
+        team1 = request.form['team1']
+        team2 = request.form['team2']
+        venue = request.form['venue']
+        
+        # Encode user input using label encoder
+        team1_encoded = team_label_encoder.transform([team1])[0]
+        team2_encoded = team_label_encoder.transform([team2])[0]
+        venue_encoded = venue_label_encoder.transform([venue])[0]
+        
+        # Modify the new_data to use team1 and team2 selected by the user
+        new_data = [[team1_encoded, team2_encoded, venue_encoded]]
+        
+        # Make prediction
+        predicted_winner = model.predict(new_data)
+        
+        # Decode the predicted winner label
+        decoded_winner = team_label_encoder.inverse_transform(predicted_winner)
+        
+        # Return predicted winner to the template for rendering
+        return render_template('result.html', predicted_winner=decoded_winner[0])
+    
+    # Render the form for user input
+    return render_template('form.html')
 
-if st.button('Predict'):
-    # Encode user input using label encoder
-    team1_encoded = team_label_encoder.transform([team1])[0]
-    team2_encoded = team_label
-# Make prediction
-prediction = model.predict([[team1_encoded, team2_encoded, venue_encoded]])
-predicted_winner = team_label_encoder.inverse_transform(prediction)[0]
+@app.route('/tipme')
+def goback():
+    return render_template('tipme.html')
 
-# Render prediction result
-st.markdown('**Predicted Winner:** ' + predicted_winner)
+if __name__ == '__main__':
+    app.run(debug=True)
