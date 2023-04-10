@@ -55,6 +55,7 @@ venues = venue_label_encoder.inverse_transform(ipl['venue'].unique())
 X_train = ipl[['team1', 'team2', 'venue']]
 y_train = ipl['winner']
 
+
 model = DecisionTreeClassifier()
 model.fit(X_train, y_train)
 
