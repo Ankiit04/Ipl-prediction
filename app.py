@@ -1,8 +1,8 @@
+import streamlit as st
 import pandas as pd
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
-import streamlit as st
 
 # Load the IPL matches dataset
 ipl = pd.read_csv('matches.csv')
@@ -11,8 +11,9 @@ ipl = pd.read_csv('matches.csv')
 team_rename_dict = {
     'Gujarat Lions': 'Gujarat Titans',
     'Kings XI Punjab': 'Punjab Kings',
-    'Rising Pune Supergiant': 'Lucknow Supergiants',
+     'Rising Pune Supergiant': 'Lucknow Supergiants',
     'Delhi Daredevils': 'Delhi Capitals',
+    
     # Add more team name mappings as needed
 }
 
@@ -20,7 +21,8 @@ team_rename_dict = {
 venue_rename_dict = {
     'ACA-VDCA Stadium': 'Arun Jaitley Stadium',
     'Green Park': 'Narendra MOdi Stadium',
-    'Buffalo Park': 'Ekana Cricket Stadium'
+    'Buffalo Park' :'Ekana Cricket Stadium'
+
     # Add more venue name mappings as needed
 }
 
@@ -46,19 +48,6 @@ ipl['team2'] = team_label_encoder.transform(ipl['team2'])
 ipl['winner'] = team_label_encoder.transform(ipl['winner'])
 ipl['venue'] = venue_label_encoder.fit_transform(ipl['venue'])
 
-teams_to_remove = ['Kochi Tuskers Kerala', 'Pune Warriors', 'Deccan Chargers']
-
-# Filter out matches involving teams to be removed
-ipl = ipl[~ipl['team1'].isin(teams_to_remove)]
-ipl = ipl[~ipl['team2'].isin(teams_to_remove)]
-ipl = ipl[~ipl['winner'].isin(teams_to_remove)]
-
-# Get unique team names and venue names
-teams = [team for team in team_label_encoder.inverse_transform(ipl['team1'].unique())]
-teams.remove(teams_to_remove[0])
-teams.remove(teams_to_remove[1])
-teams.remove(teams_to_remove[2])
-
 venues = venue_label_encoder.inverse_transform(ipl['venue'].unique())
 
 # Split the data into training and testing sets
@@ -68,57 +57,41 @@ y_train = ipl['winner']
 model = DecisionTreeClassifier()
 model.fit(X_train, y_train)
 
-# Streamlit app
+# Define Streamlit app
 def app():
-    st.title('IPL Prediction')
-    st.subheader('Select Teams and Venue:')
-    
-    team1 = st.selectbox('Team 1', teams)
-    team2 = st.selectbox('Team 2', teams)
-    venue = st.selectbox('Venue', venues)
-    
-    if st.button('Predict'):
-        # Encode user input using label encoder
-        team1_encoded = team_label_encoder.transform([team1])[0]
-        team
-@app.route('/')
-def form():
-    # Get unique team names and venue names
-    teams = team_label_encoder.inverse_transform(ipl['team1'].unique())
-    venues = venue_label_encoder.inverse_transform(ipl['venue'].unique())
-    return render_template('form.html', teams=teams, venues=venues)
+    # Set app title
+    st.set_page_config(page_title="IPL Match Winner Prediction")
 
-@app.route('/predict', methods=['GET', 'POST'])
-def predict():
-    if request.method == 'POST':
-        # Access user input from form
-        team1 = request.form['team1']
-        team2 = request.form['team2']
-        venue = request.form['venue']
-        
-        # Encode user input using label encoder
+    # Render form for user input
+    st.markdown("# IPL Match Winner Prediction")
+    team1 = st.selectbox("Select team 1", team_label_encoder.inverse_transform(ipl['team1'].unique()))
+    team2 = st.selectbox("Select team 2", team_label_encoder.inverse_transform(ipl['team2'].unique()))
+    venue = st.selectbox("Select venue", venue_label_encoder.inverse_transform(ipl['venue'].unique()))
+
+    # Make prediction on user input
+    if st.button("Predict"):
         team1_encoded = team_label_encoder.transform([team1])[0]
         team2_encoded = team_label_encoder.transform([team2])[0]
         venue_encoded = venue_label_encoder.transform([venue])[0]
-        
-        # Modify the new_data to use team1 and team2 selected by the user
         new_data = [[team1_encoded, team2_encoded, venue_encoded]]
-        
-        # Make prediction
         predicted_winner = model.predict(new_data)
-        
-        # Decode the predicted winner label
         decoded_winner = team_label_encoder.inverse_transform(predicted_winner)
-        
-        # Return predicted winner to the template for rendering
-        return render_template('result.html', predicted_winner=decoded_winner[0])
-    
-    # Render the form for user input
-    return render_template('form.html')
+        st.markdown(f"## Predicted Winner: {decoded_winner[0]}")
+         # Display predicted winner
+        st.success(decoded_winner[0])
 
-@app.route('/tipme')
-def goback():
-    return render_template('tipme.html')
+        # Render table with IPL match data
+        st.markdown("## IPL Match Data")
+        st.write(ipl)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+        # Render table with venue mapping data
+        st.markdown("## Venue Mapping Data")
+        venue_mapping = pd.DataFrame({'Venue ID': ipl['venue'].unique(), 'Venue Name': venue_label_encoder.inverse_transform(ipl['venue'].unique())})
+        st.write(venue_mapping)
+
+        # Render table with team mapping data
+        st.markdown("## Team Mapping Data")
+        team_mapping = pd.DataFrame({'Team ID': ipl['team1'].unique(), 'Team Name': team_label_encoder.inverse_transform(ipl['team1'].unique())})
+        st.write(team_mapping)
+if name == 'main':
+app()
